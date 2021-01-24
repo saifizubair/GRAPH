@@ -1,0 +1,70 @@
+package com.company;
+
+import java.lang.*;
+import java.util.*;
+import java.io.*;
+
+
+public class Main {
+    static class edge {
+        int src;
+        int nbr;
+        int wt;
+
+        edge(int src, int nbr, int wt) {
+            this.src = src;
+            this.nbr = nbr;
+            this.wt = wt;
+        }
+    }
+    public static void genratedcomp(ArrayList<edge>[]graph,int src,boolean[]visited,ArrayList<Integer>comp){
+        comp.add(src);
+        visited[src]=true;
+        for (edge e :graph[src]){
+            if (visited[e.nbr]==false){
+                genratedcomp(graph,e.nbr,visited,comp);
+            }
+        }
+    }
+    public static void main(String[] args) throws Exception {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        int vtces = Integer.parseInt(br.readLine());
+        ArrayList<edge>[] graph = new ArrayList[vtces];
+        for (int i = 0; i < vtces; i++) {
+            graph[i] = new ArrayList<>();
+        }
+        int edges = Integer.parseInt(br.readLine());
+        for (int i = 0; i < edges; i++) {
+            String[] parts = br.readLine().split(" ");
+            int v1 = Integer.parseInt(parts[0]);
+            int v2 = Integer.parseInt(parts[1]);
+            int wt = Integer.parseInt(parts[2]);
+            graph[v1].add(new edge(v1, v2, wt));
+            graph[v2].add(new edge(v2, v1, wt));
+        }
+        boolean[] visited = new boolean[vtces];
+        ArrayList<ArrayList<Integer>>comps =new ArrayList<>();
+        for (int i=0;i<vtces;i++){
+            if (visited[i]==false){
+                ArrayList<Integer>comp=new ArrayList<>();
+                genratedcomp(graph,i,visited,comp);
+                comps.add(comp);
+            }
+        }
+        System.out.println(comps.size()==1);
+        }
+    }
+
+
+
+input-->
+7
+5
+0 1 10
+2 3 10
+4 5 10
+5 6 10
+4 6 10
+
+output-->
+  false 
