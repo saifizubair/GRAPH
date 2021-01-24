@@ -1,0 +1,89 @@
+package com.company;
+
+import javafx.util.Pair;
+
+import java.lang.*;
+import java.util.*;
+import java.io.*;
+
+
+public class Main {
+
+    static class edge{
+        int src;
+        int nbr ;
+
+        public edge(int src, int nbr) {
+            this.src = src;
+            this.nbr = nbr;
+        }
+    }
+    static class pair{
+        int v;
+        String psf;
+
+        public pair(int v,String psf) {
+            this.v = v;
+            this.psf =psf;
+        }
+    }
+    public static void main(String[]args) throws Exception{
+        BufferedReader br =new BufferedReader(new InputStreamReader(System.in));
+        int vtces =Integer.parseInt(br.readLine());
+        ArrayList<edge>[]grapgh=new ArrayList[vtces];
+        for (int i=0;i<vtces;i++){
+            grapgh[i]=new ArrayList<>();
+        }
+        int edges =Integer.parseInt(br.readLine());
+        for (int i=0;i<edges;i++){
+            String[]parts =br.readLine().split(" ");
+            int v1 =Integer.parseInt(parts[0]);
+            int v2 =Integer.parseInt(parts[1]);
+            grapgh[v1].add(new edge(v1,v2));
+            grapgh[v2].add(new edge(v2,v1));
+        }
+        int src =Integer.parseInt(br.readLine());
+        ArrayDeque<pair>queue =new ArrayDeque<>();
+        queue.add(new pair(src,src+" "));
+        boolean[]visited =new boolean[vtces];
+        while (queue.size()>0){
+            pair rem =queue.remove();
+            if (visited[rem.v]==true){
+                continue;
+            }
+            visited[rem.v]=true;
+            System.out.println(rem.v+ "@"+rem.psf);
+            for (edge e : grapgh[rem.v]){
+                if (visited[e.nbr]==false){
+                    queue.add(new pair(e.nbr, rem.psf+e.nbr));
+                }
+            }
+        }
+    }
+}
+
+
+input -->
+7
+8
+0 1 10
+1 2 10
+2 3 10
+0 3 10
+3 4 10
+4 5 10
+5 6 10
+4 6 10
+2
+
+output --> 
+
+2@2 
+1@2 1
+3@2 3
+0@2 10
+4@2 34
+5@2 345
+6@2 346
+
+
