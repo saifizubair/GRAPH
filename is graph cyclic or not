@@ -1,0 +1,90 @@
+package com.company;
+
+import java.lang.*;
+import java.lang.reflect.Array;
+import java.nio.Buffer;
+import java.util.*;
+import java.io.*;
+
+
+public class Main {
+    static class edge {
+        int src;
+        int nbr;
+
+        public edge(int src, int nbr) {
+            this.src = src;
+            this.nbr = nbr;
+        }
+    }
+    static class pair{
+        int v;
+        String psf;
+
+        public pair(int v, String psf) {
+            this.v = v;
+            this.psf = psf;
+        }
+    }
+    public static void main(String[]args) throws Exception{
+        BufferedReader br =new BufferedReader(new InputStreamReader(System.in));
+        int vtces =Integer.parseInt(br.readLine());
+        ArrayList<edge>[]graph =new ArrayList[vtces];
+        for (int i=0;i<vtces;i++){
+            graph[i]=new ArrayList<>();
+        }
+        int edges =Integer.parseInt(br.readLine());
+        for (int i=0;i<edges;i++){
+            String[] parts =br.readLine().split(" ");
+            int v1 =Integer.parseInt(parts[0]);
+            int v2 =Integer.parseInt(parts[1]);
+            graph[v1].add(new edge(v1,v2));
+            graph[v2].add(new edge(v2,v1));
+        }
+        boolean visited[]=new boolean[vtces];
+        for (int v=0;v<vtces;v++){
+            if (visited[v]==false){
+                boolean cyclic =iscyclic(graph,v,visited);
+                if (cyclic){
+                    System.out.println(true);
+                    return;
+                }
+            }
+        }
+        System.out.println(false);
+    }
+    public static boolean iscyclic(ArrayList<edge>[]graph ,int src,boolean[]visited){
+        ArrayDeque<pair>queue =new ArrayDeque<>();
+        queue.add(new pair(src,src+" "));
+        while (queue.size()>0){
+            pair rem =queue.remove();
+            if (visited[rem.v]==true){
+                return true;
+            }
+            visited[rem.v]=true;
+            for (edge e :graph[rem.v]){
+                if (visited[e.nbr]==false){
+                   queue.add(new pair(e.nbr,rem.psf+e.nbr));
+                }
+            }
+        }
+        return false;
+    }
+}
+
+
+
+input -->
+7
+6
+0 1 10
+1 2 10
+2 3 10
+3 4 10
+4 5 10
+5 6 10
+
+
+output-->
+
+false 
